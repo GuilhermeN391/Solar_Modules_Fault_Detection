@@ -92,7 +92,7 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 ### Dados de Treinamento
 
 - **Conjunto de dados**: Repositórios com as imagens (.jpg) divididas de acordo com a sua classificação;
-- **Tamanho**: 17.000 instâncias;
+- **Tamanho**: 17.000 instâncias - 85% do Dataset;
 - **Características**: As 12 classes foram utilizadas inicialmente;
 - **Definição das imagens**: 46x46 na aplicação do composer.
 
