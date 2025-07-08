@@ -74,14 +74,12 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 | Offline-Module | Módulo inteiro superaquecido|
 | No-Anomaly | Painel funcionando normalmente|
 
-Após o tratamento de dados, com os passos indicados pelo [Heart Disease Prediction](https://github.com/maxim-eyengue/Heart-Disease-App), o Dataset total para treinamento e teste do modelo consiste em **519** amostras que serão divididas em **80%** para treino e **20%** para teste, com valores totais para cada grupo apresentados em seguida. Valor o qual foi decorrente da presença alta de catalogações de pacientes repedidas, além da presença de dados inconsistentes indicado através do tratamento feito que foram desconsiderados para a implementação do modelo.
-
 ### Resumo do Dataset original
 
 | Aspecto | Informação |
 |---------|------------|
 | Total de imagens | 20.000 |
-| Classe alvo | "target"  |
+| Classe alvo | "anomaly_class" |
 | Sub-Classes | 12  |
 | Valores nulos | 0 (0.0%)|
 
@@ -98,7 +96,18 @@ Após o tratamento de dados, com os passos indicados pelo [Heart Disease Predict
 - **Características**: As 12 classes foram utilizadas inicialmente;
 - **Definição das imagens**: 46x46 na aplicação do composer.
 
-### Dados iniciais da Rede Neural Convolucional
+### Modelo inicial da Rede Neural Convolucional
+
+Para o treinamento inicial dos dados, foi aplicado o modelo apresentado nas aulas para Redes Neurais Convolucionais, que constitui-se nos seguintes parâmetros para os dados aplicados:
+
+- 1ª Convolução: Entrada com dimensões 3x46x46 após tratamento dos dados.
+  - in_channels=3; out_channels=n_feature; kernel_size=3 -> Resize: 46 - 3 + 1 = 44;
+  - Dimensões de Saída: n_featurex44x44;
+
+- 2ª Convolução: Entrada com dimensões n_featurex22x22 após o max_pool2d com kernel_size=2 na saída da 1ª Convolução.
+  - in_channels=n_feature; out_channels=n_feature; kernel_size=3 -> Resize: 22 - 3 + 1 = 20;
+  - Dimensões de Saída: n_featurex20x20;
+ 
 
 ### Dados da Rede Neural Convolucional após variação
 
