@@ -24,12 +24,9 @@ Para apresentar as informações importantes do modelo, esse Model Card foi dese
 - **Tipo de modelo**: Rede Neural Convolucional para classificação em Multiclasse implementada com PyTorch
 - **Versão**: 1.0
 - **Framework**: PyTorch
-- **Número de features**: 20 [A ALTERAR]
+- **Número de features**: Variados ao longo do trabalho
 - **Dispositivo utilizado**: CPU
-- **Hyperparâmetros**:
-  - Batch size: 16
-  - Learning rate: 0,0005659641838443741 - Modelo Final
-  - Número de épocas: 14 - Modelo Final
+- **Hyperparâmetros**: Variados ao longo do trabalho
 
 ### Uso Pretendido
 
@@ -100,20 +97,44 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 
 Para o treinamento inicial dos dados, foi aplicado o modelo apresentado nas aulas para Redes Neurais Convolucionais, que constitui-se nos seguintes parâmetros para os dados aplicados:
 
-- 1ª Convolução: Entrada com dimensões 3x46x46 após tratamento dos dados.
+- 1ª Convolução: Entrada com dimensões 3 x 46 x 46 após tratamento dos dados.
   - in_channels=3; out_channels=n_feature; kernel_size=3 -> Resize: 46 - 3 + 1 = 44;
-  - Dimensões de Saída: n_featurex44x44;
+  - Dimensões de Saída: n_feature x 44 x 44;
 
-- 2ª Convolução: Entrada com dimensões n_featurex22x22 após o max_pool2d com kernel_size=2 na saída da 1ª Convolução.
+- 2ª Convolução: Entrada com dimensões n_feature x 22 x 22 após o max_pool2d com kernel_size=2 na saída da 1ª Convolução.
   - in_channels=n_feature; out_channels=n_feature; kernel_size=3 -> Resize: 22 - 3 + 1 = 20;
-  - Dimensões de Saída: n_featurex20x20;
+  - Dimensões de Saída: n_feature x 20 x 20;
  
+Após a 2ª convolução, com o max_pool2d utilizando kernel_size=2, as dimensões para a aplicação do dropout se estabeleceram em n_feature x 10 x 10 x 50. Para a saída após a realização do **dropout**, aplicando o parâmetro p, se estabeleceram as 12 classificações para os dados.
 
-### Dados da Rede Neural Convolucional após variação
+Com os hiperparâmetros: n_feature = 5; p = 0.3 e lr = 0,0003. As métricas resultantes a saída com e seu dropout estão apresentadas na Tabela a seguir, com os gráficos de perdas e Matriz de confusão na secção de visualizações.
 
-### Nova Configuração das camadas da CNN 
+| Métrica | Informação |
+|---------|------------|
+| Perdas de treinamento (sem Dropout) | 0,6794 |
+| Perdas de validação (sem Dropout) | 0,6446 |
+| Perdas de treinamento | 0,6482 |
+| Perdas de validação | 0,6237 |
+
+### Dados da Rede Neural Convolucional após variação de hiperparâmetros
+
+A variação dos hiperparâmetros se consituiu na utilização da mesma arquitetura desenvolvida no modelo inicial, apenas variando os hiperparâmetros. Para fazer isso, de forma automática a partir da biblioteca _optuna mlflow scikit-learn_ foram testados 20 cenários com diversos valores para: n_feature; p e lr, e o cenário que entregou as melhores métricas de saída será apresentado, com os hiperparâmetros resultantes e as métricas de saída. 
+
+Com os hiperparâmetros: n_feature = 14; p = 0,3371287734951104 e lr = 0,00047886451006673013. As perdas de validação nesse caso foram de 0,88912 com os seus gráficos apresentados na secção de visualizações.
+
+### Nova Configuração das camadas da CNN
+
+Outra abortagem para busca de otimização do modelo de CNN aplicado foi a alteração das camadas da rede.
 
 ## Visualizações
+
+### CNN com variação de Hiperparâmetros
+
+**Evolução das perdas:**  
+   ![Evolução das perdas](images/loss_graf.png)
+
+**Matriz de Confusão:**  
+   ![Matriz de Confusão](images/conf_matrix.png)
 
 ## Principais Observações do projeto
 
