@@ -45,11 +45,8 @@ Para apresentar as informações importantes do modelo, esse Model Card foi dese
 As métricas de avaliação foram escolhidas considerando o forte desbalanceamento dos dados:
 
 - **Acurácia**: Proporção de predições corretas;
-- **Precisão**: Proporção de verdadeiros positivos entre os casos classificados como positivos;
-- **Recall**: Proporção de fraudes corretamente identificadas;
-- **Especificidade**: Proporção de transações legítimas corretamente identificadas;
-- **F1-Score**: Média harmônica entre precisão e recall;
-- **AUC-ROC**: Área sob a curva ROC.
+- **Perdas**: Perdas totais de treinamento no final do processo;
+- **Matriz de confução**: Apresentação gráfica dos previstos e verdadeiros;
 
 ### Informações do Dataset
 
@@ -111,10 +108,10 @@ Com os hiperparâmetros: n_feature = 5; p = 0.3 e lr = 0,0003. As métricas resu
 
 | Métrica | Informação |
 |---------|------------|
-| Perdas de treinamento (sem Dropout) | 0,6794 |
-| Perdas de validação (sem Dropout) | 0,6446 |
-| Perdas de treinamento | 0,6482 |
-| Perdas de validação | 0,6237 |
+| Acurácia de treinamento (sem Dropout) | 0,6794 |
+| Acurácia de validação (sem Dropout) | 0,6446 |
+| Acurácia de treinamento | 0,6482 |
+| Acurácia de validação | 0,6237 |
 
 ### Dados da Rede Neural Convolucional após variação de hiperparâmetros
 
@@ -128,13 +125,21 @@ Outra abortagem para busca de otimização do modelo de CNN aplicado foi a alter
 
 ## Visualizações
 
-### CNN com variação de Hiperparâmetros
-
-**Evolução das perdas:**  
-   ![Evolução das perdas](images/loss_graf.png)
+### CNN base com duas camadas e parâmetros iniciais
 
 **Matriz de Confusão:**  
-   ![Matriz de Confusão](images/conf_matrix.png)
+   ![Matriz de confusão CNN2 padrão](images/DefaultmodelCNN2/conf_matrix.png)
+
+**Evolução das perdas:**  
+   ![Evolução das perdas CNN2 padrão](images/DefaultmodelCNN2/loss_graf.png)
+
+### CNN com quatro camadas e parâmetros iniciais
+
+**Matriz de Confusão:**  
+   ![Matriz de confusão CNN4 padrão](images/DefaultmodelVeryDeep/conf_matrix_verydeep_default.png)
+
+**Evolução das perdas:**  
+   ![Evolução das Perdas CNN4 padrão](images/DefaultmodelVeryDeep/Loss_fig_verydeep_default.png)
 
 ## Principais Observações do projeto
 
