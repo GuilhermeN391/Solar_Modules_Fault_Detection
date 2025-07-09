@@ -120,7 +120,7 @@ Com os hiperparâmetros: n_feature = 5; p = 0.3 e lr = 0,0003. As métricas resu
 
 A variação dos hiperparâmetros se consituiu na utilização da mesma arquitetura desenvolvida no modelo inicial, apenas variando os hiperparâmetros. Para fazer isso, de forma automática a partir da biblioteca _optuna mlflow scikit-learn_ foram testados 20 cenários com diversos valores para: n_feature; p e lr, e o cenário que entregou as melhores métricas de saída será apresentado, com os hiperparâmetros resultantes e as métricas de saída. 
 
-Com os hiperparâmetros: n_feature = 14; p = 0,3371287734951104 e lr = 0,00047886451006673013. As perdas de validação nesse caso foram de 0,88912 com os seus gráficos apresentados na secção de visualizações.
+Com os hiperparâmetros: n_feature = 14; p = 0,3371287734951104 e lr = 0,00047886451006673013. As perdas de validação nesse caso foram de 0,88912 e as perdas de treinamento foram 0,93424 com os seus gráficos apresentados na secção de visualizações.
 
 ### Nova Configuração das camadas da CNN
 
