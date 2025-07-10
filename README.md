@@ -46,7 +46,8 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 
 - **Acurácia**: Proporção de predições corretas;
 - **Perdas**: Perdas totais de treinamento no final do processo;
-- **Matriz de confução**: Apresentação gráfica dos previstos e verdadeiros;
+- **Precisão**: Proporção de verdadeiros positivos entre os casos classificados como positivos;
+- **Matriz de confusão**: Apresentação gráfica dos previstos e verdadeiros;
 
 ### Informações do Dataset
 
@@ -113,9 +114,11 @@ Com os hiperparâmetros: n_feature = 5; p = 0.3 e lr = 0,0003. As métricas resu
 | Acurácia de treinamento | 0,6482 |
 | Acurácia de validação | 0,6237 |
 
+Para simplificação dos futuros modelos, foi feita a aplicação do dropout em todos.
+
 ### Dados da Rede Neural Convolucional após variação de hiperparâmetros
 
-A variação dos hiperparâmetros se consituiu na utilização da mesma arquitetura desenvolvida no modelo inicial, apenas variando os hiperparâmetros. Para fazer isso, de forma automática a partir da biblioteca _optuna mlflow scikit-learn_ foram testados 20 cenários com diversos valores para: n_feature; p e lr, e o cenário que entregou as melhores métricas de saída será apresentado, com os hiperparâmetros resultantes e as métricas de saída. 
+A variação dos hiperparâmetros se consituiu na utilização da mesma arquitetura desenvolvida no modelo inicial, apenas variando os hiperparâmetros, com o objetivo de diminuir as perdas de treinamento e validação. Para fazer isso, de forma automática a partir da biblioteca _optuna mlflow scikit-learn_ foram testados 20 cenários com diversos valores para: n_feature; p e lr, e o cenário que entregou as melhores métricas de saída será apresentado, com os hiperparâmetros resultantes e as métricas de saída. 
 
 Com os hiperparâmetros: n_feature = 14; p = 0,3371287734951104 e lr = 0,00047886451006673013. As perdas de validação nesse caso foram de 0,88912 e as perdas de treinamento foram 0,93424 com os seus gráficos apresentados na secção de visualizações.
 
@@ -175,6 +178,19 @@ Outra abortagem para busca de otimização do modelo de CNN aplicado foi a alter
 #### 2.3 Hooks na saída de cada camada da rede
 
   ![Hooks CNN4](images/Hooks_verydeep.png)
+
+## Tabelas Adicionais
+
+### Métricas resultantes por modelo
+
+
+| Métrica | CNN2 - padrão | CNN2 - melhor | CNN4 - padrão | CNN4 - melhor |
+|:---------:|:------------:|:------------:|:------------:|:------------:|
+| Perdas de treinamento |	1,2597 | 0,9342 | 1,1028 | 0,6199 |
+| Perdas de validação | 1,1821 | 0,8891 |  1,0292 | 0,7206 |
+| Acurácia de treinamento | 0,6482 | 0,7444 | 0,6898 | 0,8306 |
+| Acurácia de validação | 0,6482 | 0,7027 |  0,6680 | 0,7657 |
+| Precisão ponderada | 0,5731 | 0,6719 | 0,5970 | 0,7578 |
 
 ## Principais Observações do projeto
 
