@@ -125,21 +125,56 @@ Outra abortagem para busca de otimização do modelo de CNN aplicado foi a alter
 
 ## Visualizações
 
-### CNN base com duas camadas e parâmetros iniciais
+### 1. CNN base com duas camadas
+
+#### 1.1 Aplicação dos parâmetros iniciais
 
 **Matriz de Confusão:**  
    ![Matriz de confusão CNN2 padrão](images/DefaultmodelCNN2/conf_matrix.png)
 
-**Evolução das perdas:**  
-   ![Evolução das perdas CNN2 padrão](images/DefaultmodelCNN2/loss_graf.png)
+**Evolução das perdas:**
+  ![Evolução das perdas CNN2 padrão](images/DefaultmodelCNN2/loss_fig.png)
+   
 
-### CNN com quatro camadas e parâmetros iniciais
+#### 1.2 Melhor modelo com variação dos hiperparâmetros
+
+**Matriz de Confusão:**  
+   ![Matriz de confusão CNN2 melhor](images/BestmodelCNN2/best_model_hyper_conf_matrix.png)
+   
+**Evolução das perdas:**  
+   ![Evolução das perdas CNN2 melhor](images/BestmodelCNN2/best_model_hyper_loss_fig.png)
+
+**Comparação entre os hiperparâmetros testados:**  
+   ![Comparação entre os hiperparâmetros](images/hyper_CNN2.png)
+
+#### 1.3 Hooks na saída de cada camada da rede
+
+  ![Hooks CNN2](images/Hooks_CNN2.png)
+
+### 2. CNN com modificação do número de camadas para quatro
+
+#### 2.1 Aplicação dos parâmetros iniciais
 
 **Matriz de Confusão:**  
    ![Matriz de confusão CNN4 padrão](images/DefaultmodelVeryDeep/conf_matrix_verydeep_default.png)
 
 **Evolução das perdas:**  
    ![Evolução das Perdas CNN4 padrão](images/DefaultmodelVeryDeep/Loss_fig_verydeep_default.png)
+
+#### 2.2 Melhor modelo com variação dos hiperparâmetros
+
+**Matriz de Confusão:**  
+   ![Matriz de confusão CNN4 melhor](images/BestmodelVeryDeep/conf_matrix_verydeep_best_model.png)
+
+**Evolução das perdas:**  
+   ![Evolução das Perdas CNN4 melhor](images/BestmodelVeryDeep/Loss_fig_verydeep_best_model.png)
+
+**Comparação entre os hiperparâmetros testados:**  
+   ![Comparação entre os hiperparâmetros](images/hyper_verydeep.png)
+
+#### 2.3 Hooks na saída de cada camada da rede
+
+  ![Hooks CNN4](images/Hooks_verydeep.png)
 
 ## Principais Observações do projeto
 
