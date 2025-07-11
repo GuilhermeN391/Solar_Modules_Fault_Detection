@@ -36,7 +36,7 @@ Para apresentar as informações importantes do modelo, esse Model Card foi dese
 
 ### Fatores
 
-- **Fatores relevantes**: Buscando indicar a propensão a doença, fatores como idade, nível de colesterol, presença de angina (dor no peito), pressão arterial, frequência cardiaca, glicemina em jejum;
+- **Fatores relevantes**: Buscando o tipo de falha presente em placas solares, há diversos tipo catalogados, que serão explorados a seguir;
 - **Fatores de avaliação**: A CNN foi aplicada com variações de hyperparâmetros a partir da observação das métricas resultantes, escolheu-se o melhor caso;
 - **Fatores de avaliação**: A configuração das camadas da CNN também foi alterada também para verificação de melhoras no modelo;
 
@@ -46,7 +46,7 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 
 - **Acurácia**: Proporção de predições corretas;
 - **Perdas**: Perdas totais de treinamento no final do processo;
-- **Precisão**: Proporção de verdadeiros positivos entre os casos classificados como positivos;
+- **Precisão ponderada**: Proporção de verdadeiros positivos entre os casos classificados como positivos, sendo ponderada pela quantidade de valores da classe para fornecer um panorama geral;
 - **Matriz de confusão**: Apresentação gráfica dos previstos e verdadeiros;
 
 ### Informações do Dataset
@@ -93,7 +93,7 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 
 ### Modelo inicial da Rede Neural Convolucional
 
-Para o treinamento inicial dos dados, foi aplicado o modelo apresentado nas aulas para Redes Neurais Convolucionais, que constitui-se nos seguintes parâmetros para os dados aplicados:
+Para o treinamento inicial dos dados, foi aplicado o modelo apresentado nas aulas para Redes Neurais Convolucionais (CNN2), que constitui-se nos seguintes parâmetros para os dados aplicados:
 
 - 1ª Convolução: Entrada com dimensões 3 x 46 x 46 após tratamento dos dados.
   - in_channels=3; out_channels=n_feature; kernel_size=3 -> Resize: 46 - 3 + 1 = 44;
@@ -114,17 +114,41 @@ Com os hiperparâmetros: n_feature = 5; p = 0.3 e lr = 0,0003. As métricas resu
 | Acurácia de treinamento | 0,6482 |
 | Acurácia de validação | 0,6237 |
 
-Para simplificação dos futuros modelos, foi feita a aplicação do dropout em todos.
+Para simplificação na execução dos seguintes modelos, foi feita a aplicação do dropout em todos, restringindo a inibição do dropout para esse modelo apenas.
 
 ### Dados da Rede Neural Convolucional após variação de hiperparâmetros
 
 A variação dos hiperparâmetros se consituiu na utilização da mesma arquitetura desenvolvida no modelo inicial, apenas variando os hiperparâmetros, com o objetivo de diminuir as perdas de treinamento e validação. Para fazer isso, de forma automática a partir da biblioteca _optuna mlflow scikit-learn_ foram testados 20 cenários com diversos valores para: n_feature; p e lr, e o cenário que entregou as melhores métricas de saída será apresentado, com os hiperparâmetros resultantes e as métricas de saída. 
 
-Com os hiperparâmetros: n_feature = 14; p = 0,3371287734951104 e lr = 0,00047886451006673013. As perdas de validação nesse caso foram de 0,88912 e as perdas de treinamento foram 0,93424 com os seus gráficos apresentados na secção de visualizações.
+Com os hiperparâmetros: 
+- n_feature = 14; 
+- p = 0,33713;
+- lr = 0,00047886; e
+- Número de épocas = 15. 
+
+Aplicando esses hiperparâmetros ao modelo CNN2, as perdas de validação foram de **0,88912** e as perdas de treinamento foram **0,93424** com os seus gráficos apresentados na secção de visualizações, com uma acurácia de validação igual a **0,7027** e uma precisão ponderada igual a **0,6719**.
 
 ### Nova Configuração das camadas da CNN
 
-Outra abortagem para busca de otimização do modelo de CNN aplicado foi a alteração das camadas da rede.
+Outra abordagem para busca de otimização do modelo de CNN aplicado foi a alteração das camadas da rede. A partir do modelo fornecido, o CNN2, foi feita uma alteração na quantidade de camadas convolucionais, inserindo mais **duas camadas**, totalizando 4 camadas. Além disso, foi feita alteração na quantidade de canais de entrada e saída das camadas internas, caracterizando cada camada da seguinte forma, sem alteração dos dados de entrada.
+
+- 1ª Convolução: in_channels = 3; out_channels = n_feature; kernel_size = 3;
+
+- 2ª Convolução: in_channels = n_feature; out_channels = n_feature * 2; kernel_size = 3;
+
+- 3ª Convolução: in_channels = n_feature * 2; out_channels = n_feature * 4; kernel_size = 3;
+
+- 4ª Convolução: in_channels = n_feature * 4; out_channels = n_feature * 8; kernel_size = 3;
+
+Com as dimensões da imagem em 46 x 46, após a 4ª convolução, com o max_pool2d utilizando kernel_size= 2, as dimensões para a aplicação do dropout se estabeleceram em n_feature * 8 x 2 x 2 x 50. Para a saída após a realização do **dropout**, aplicando o parâmetro p, se estabeleceram as 12 classificações para os dados.
+
+Foram feitos testes utilizando os hiperparâmetros iguais aos testados no modelo base CNN2 e com um modelo melhorado aplicando a biblioteca _optuna mlflow scikit-learn_ no mesmo procedimento feito com a CNN2. Focando na apresentação do modeleo melhorado, com os resultados e visualizações dos dois modelos relatados em seguida, após o mapeamento dos hiperparâmetros, o melhor modelo encontrado e aplicado foi:
+
+- n_feature = 14; 
+- p = 0,16571;
+- lr = 0,00040153; 
+
+Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206**, a acurácia de validação foi **0,7657** e a precisão ponderada foi **0,7578**.
 
 ## Visualizações
 
@@ -189,10 +213,17 @@ Outra abortagem para busca de otimização do modelo de CNN aplicado foi a alter
 | Perdas de treinamento |	1,2597 | 0,9342 | 1,1028 | 0,6199 |
 | Perdas de validação | 1,1821 | 0,8891 |  1,0292 | 0,7206 |
 | Acurácia de treinamento | 0,6482 | 0,7444 | 0,6898 | 0,8306 |
-| Acurácia de validação | 0,6482 | 0,7027 |  0,6680 | 0,7657 |
+| Acurácia de validação | 0,6237 | 0,7027 |  0,6680 | 0,7657 |
 | Precisão ponderada | 0,5731 | 0,6719 | 0,5970 | 0,7578 |
 
 ## Principais Observações do projeto
+
+[IREI DESENVOLVER ESSES TÓPICOS]
+
+- Desbalanceio do Dataset, mas que não geraram resultados insastifatórios
+- Melhores resultados ao variar os hiperparâmetros
+- Melhor modelo senco o CNN4 - melhor, como esperado
+- Observação relativa a classe No-Anomally
 
 ## Como usar o modelo
 
