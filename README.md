@@ -228,31 +228,130 @@ Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206
 
 ## Como usar o modelo
 
-[A MUDAR ISSO AQUI PQ TÁ PRA CLASSIFICAÇÃO LOGISTICA]
 ```python
-# Exemplo de código para carregar e usar o modelo treinado
+# Exemplo de código para carregar e usar o modelo treinado para classificação de imagens
 import torch
 from torch import nn
+import torch.nn.functional as F
+from torchvision.transforms.v2 import Compose, Resize, ToImage, ToDtype, Normalize
+import cv2
+import os
 
-# Carregar o modelo
-input_dim = 20  # Número de features após engenharia de atributos
-model = nn.Sequential(
-    nn.Linear(input_dim, 1)
-)
-model.load_state_dict(torch.load("modelo_classificacao.pth"))
-model.eval()
+# 1. Definição completa da classe do modelo (a mesma usada no treinamento)
+class VeryDeepCNN(nn.Module):
+    def __init__(self, n_feature, p=0.0):
+        super(VeryDeepCNN, self).__init__()
+        self.n_feature = n_feature
+        self.p = p
 
-# Função para preprocessar novas entradas
-def preprocess(data):
-    # Implementar o mesmo preprocessamento usado no treinamento
-    # ...
-    return preprocessed_data
-def detectar_doenca(dados_paciente, threshold=0.5):
-    preprocessed = preprocess(dados_paciente)
+        # Camadas convolucionais
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=n_feature, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=n_feature, out_channels=n_feature * 2, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv2d(in_channels=n_feature * 2, out_channels=n_feature * 4, kernel_size=3, padding=1)
+        self.conv4 = nn.Conv2d(in_channels=n_feature * 4, out_channels=n_feature * 8, kernel_size=3, padding=1)
+
+        # Camadas lineares (classificador)
+        # Para uma imagem de entrada 46x46, a saída da última camada de pooling é 2x2
+        self.fc1 = nn.Linear(in_features=(n_feature * 8) * 4, out_features=50)
+        self.fc2 = nn.Linear(in_features=50, out_features=12) # 12 classes de saída
+
+        # Camada de dropout
+        self.drop = nn.Dropout(self.p)
+
+    def featurizer(self, x):
+        x = F.max_pool2d(F.relu(self.conv1(x)), kernel_size=2)
+        x = F.max_pool2d(F.relu(self.conv2(x)), kernel_size=2)
+        x = F.max_pool2d(F.relu(self.conv3(x)), kernel_size=2)
+        x = F.max_pool2d(F.relu(self.conv4(x)), kernel_size=2)
+        return nn.Flatten()(x)
+
+    def classifier(self, x):
+        if self.p > 0:
+            x = self.drop(x)
+        x = F.relu(self.fc1(x))
+        if self.p > 0:
+            x = self.drop(x)
+        x = self.fc2(x)
+        return x
+
+    def forward(self, x):
+        x = self.featurizer(x)
+        x = self.classifier(x)
+        return x
+
+# 2. Instanciar e carregar o modelo treinado
+# Use os mesmos hiperparâmetros do modelo salvo
+best_n_feature = 14
+best_dropout_rate = 0.1657
+model = VeryDeepCNN(n_feature=best_n_feature, p=best_dropout_rate)
+
+# Carregar os pesos salvos
+try:
+    model.load_state_dict(torch.load("modelo_classificacao.pth"))
+    print("Modelo carregado com sucesso!")
+except FileNotFoundError:
+    print("Erro: 'modelo_classificacao.pth' não encontrado. Certifique-se de que o arquivo está no diretório correto.")
+    model = None
+
+# Colocar o modelo em modo de avaliação
+if model:
+    model.eval()
+
+# 3. Definir o pré-processamento e a lista de classes
+# As médias e desvios padrão devem ser os mesmos calculados no treinamento
+norm_mean = [0.6187, 0.6187, 0.6187] 
+norm_std = [0.0734, 0.0734, 0.0734]
+
+preprocess_transform = Compose([
+    Resize((46, 46)),
+    ToImage(),
+    ToDtype(torch.float32, scale=True),
+    Normalize(mean=norm_mean, std=norm_std)
+])
+
+# A ordem dos nomes deve corresponder exatamente à ordem do treinamento
+class_names = ['Cell', 'Cell-Multi', 'Cracking', 'Diode', 'Diode-Multi',
+               'Hot-Spot', 'Hot-Spot-Multi', 'No-Anomaly', 'Offline-Module',
+               'Shadowing', 'Soiling', 'Vegetation']
+
+# 4. Funções para realizar a predição em uma nova imagem
+def preprocess_image(image_path):
+    """Lê uma imagem, aplica as transformações e a prepara para o modelo."""
+    image = cv2.imread(image_path)
+    if image is None:
+        return None
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # Converte de BGR (OpenCV) para RGB
+    image_tensor = preprocess_transform(image)
+    return image_tensor.unsqueeze(0) # Adiciona a dimensão do batch
+
+def detect_anomaly(image_path, model, class_names):
+    """Carrega uma imagem, a pré-processa e retorna o nome da classe prevista."""
+    if not model:
+        print("Modelo não está carregado. Impossível prever.")
+        return None
+
+    image_tensor = preprocess_image(image_path)
+    if image_tensor is None:
+        print(f"Não foi possível ler a imagem em: {image_path}")
+        return None
+
     with torch.no_grad():
-        output = model(preprocessed)
-        prob = 1 / (1 + torch.exp(-output))
-        return prob.item() >= threshold
+        outputs = model(image_tensor)
+        _, predicted_idx = torch.max(outputs, 1)
+    
+    return class_names[predicted_idx.item()]
+
+# --- Exemplo de Uso ---
+if __name__ == "__main__":
+    # A MUDAR: Substitua pelo caminho da imagem que você quer classificar
+    caminho_da_imagem = 'caminho/para/sua/imagem.jpg' 
+
+    if not os.path.exists(caminho_da_imagem):
+        print(f"Erro: Arquivo de imagem não encontrado em '{caminho_da_imagem}'")
+    else:
+        anomalia_prevista = detect_anomaly(caminho_da_imagem, model, class_names)
+        if anomalia_prevista:
+            print(f"\nA anomalia detectada na imagem é: {anomalia_prevista}")
 ```
 ## Referências
 
