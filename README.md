@@ -229,7 +229,6 @@ Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206
 ## Como usar o modelo
 
 ```python
-# Exemplo de código para carregar e usar o modelo treinado para classificação de imagens
 import torch
 from torch import nn
 import torch.nn.functional as F
