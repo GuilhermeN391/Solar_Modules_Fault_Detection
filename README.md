@@ -19,24 +19,24 @@ Para apresentar as informações importantes do modelo, esse Model Card foi dese
 
 ### Detalhes do Modelo
 
-- **Desenvolvido por**: Guilherme Nascimento da Silva e Israel da Silva Félix de Lima
-- **Data de desenvolvimento**: 07/2025
-- **Tipo de modelo**: Rede Neural Convolucional para classificação em Multiclasse implementada com PyTorch
-- **Versão**: 1.0
-- **Framework**: PyTorch
-- **Número de features**: Variados ao longo do trabalho
-- **Dispositivo utilizado**: CPU
-- **Hyperparâmetros**: Variados ao longo do trabalho
+- **Desenvolvido por**: Guilherme Nascimento da Silva e Israel da Silva Félix de Lima;
+- **Data de desenvolvimento**: 07/2025;
+- **Tipo de modelo**: Rede Neural Convolucional para classificação em Multiclasse implementada com PyTorch;
+- **Versão**: 1.0;
+- **Framework**: PyTorch;
+- **Número de features**: Variados ao longo do trabalho de acordo com o relatado;
+- **Dispositivo utilizado**: CPU;
+- **Hyperparâmetros**: Variados ao longo do trabalho de acordo com o relatado.
 
 ### Uso Pretendido
 
-- **Uso primário**: Detectar Anomalias em painéis solares, para correção do equipamento;
+- **Uso primário**: Detectar Anomalias em painéis solares, para realização de manutenção, correção ou até troca do equipamento;
 - **Usuários pretendidos**: Clientes proprietários de usinas fotovoltaicas de variadas cargas geradas;
 - **Casos fora do escopo**: Não deve ser usado como único mecanismo para indicação de falhas em placas solares.
 
 ### Fatores
 
-- **Fatores relevantes**: Buscando o tipo de falha presente em placas solares, há diversos tipo catalogados, que serão explorados a seguir;
+- **Fatores relevantes**: Buscando o tipo de falha presente em placas solares, há 11 (onze) tipos de defeitos catalogados, que serão explorados a seguir;
 - **Fatores de avaliação**: A CNN foi aplicada com variações de hyperparâmetros a partir da observação das métricas resultantes, escolheu-se o melhor caso;
 - **Fatores de avaliação**: A configuração das camadas da CNN também foi alterada também para verificação de melhoras no modelo;
 
@@ -69,13 +69,16 @@ As métricas de avaliação foram escolhidas considerando o forte desbalanceamen
 | Offline-Module | Módulo inteiro superaquecido|
 | No-Anomaly | Painel funcionando normalmente|
 
+- A classe "No-Anomaly" possui metade dos dados do Dataset, com 10.000 imagens, enquanto as 10.000 restantes estão distribuídas entre aas 11 classes restantes, que simbolizam defeitos presentes nos módulos fotovoltaicos relatados.
+
 ### Resumo do Dataset original
 
 | Aspecto | Informação |
-|---------|------------|
+|:---------:|:------------:|
 | Total de imagens | 20.000 |
 | Classe alvo | "anomaly_class" |
 | Sub-Classes | 12  |
+| Maior classe | No-Anomally (10.000 amostras) |
 | Valores nulos | 0 (0.0%)|
 
 ### Dados de Avaliação
@@ -218,12 +221,10 @@ Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206
 
 ## Principais Observações do projeto
 
-[IREI DESENVOLVER ESSES TÓPICOS]
-
-- Desbalanceio do Dataset, mas que não geraram resultados insastifatórios
-- Melhores resultados ao variar os hiperparâmetros
-- Melhor modelo senco o CNN4 - melhor, como esperado
-- Observação relativa a classe No-Anomally
+- As 12 classificações do sistema estão desbalanceadas, uma vez que existem 11 tipos diferentes de anomalias catalogadas e apenas 1 classe para os módulos em defeitos, como já mencionado. Fazendo com que haja uma variação de amostras, variando dos 10.000 presentes na classe "No-Anomally", para 1.877 na classe "Cell", com o valor mínimo de amostras presentes na classe "Diode-Multi" com 175;
+- Ao aplicar tanto no modelo de duas camadas, quanto no de quatro camadas, houve melhores resultados quando foram aplicados novos hiperparâmetros, que possibilitaram o melhor aproveitamento de abmos os modelos, entregando métricas de resultados maximizadas;
+- Outro fator de melhora para o modelo de Rede Neural Convolucional foi a adição de mais camadas internas, com variação no número de features internas, havendo uma potencialização na melhora das métricas de resultados, principalmente ao alinhar o aumento de camadas à variação dos hiperparâmetros;
+- A classe principal do Dataset, a "No-Anomally" concentrou metade dos dados totais do Dataset, ou seja, há uma grande influência nos resultados finais do modelo, por exemplo: a presição nela foi de 0.8825, um valor acima da precisão poderada, indicando que o modelo trabalha bem com clases mais povoadas, havendo mais amostras para validação e/ou treinamento.
 
 ## Como usar o modelo
 
