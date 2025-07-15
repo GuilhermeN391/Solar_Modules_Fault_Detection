@@ -228,6 +228,32 @@ Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206
 
 ## Como usar o modelo
 
+[A MUDAR ISSO AQUI PQ TÁ PRA CLASSIFICAÇÃO LOGISTICA]
+```python
+# Exemplo de código para carregar e usar o modelo treinado
+import torch
+from torch import nn
+
+# Carregar o modelo
+input_dim = 20  # Número de features após engenharia de atributos
+model = nn.Sequential(
+    nn.Linear(input_dim, 1)
+)
+model.load_state_dict(torch.load("modelo_classificacao.pth"))
+model.eval()
+
+# Função para preprocessar novas entradas
+def preprocess(data):
+    # Implementar o mesmo preprocessamento usado no treinamento
+    # ...
+    return preprocessed_data
+def detectar_doenca(dados_paciente, threshold=0.5):
+    preprocessed = preprocess(dados_paciente)
+    with torch.no_grad():
+        output = model(preprocessed)
+        prob = 1 / (1 + torch.exp(-output))
+        return prob.item() >= threshold
+```
 ## Referências
 
 1. Yaghoubi, A. A. (2025). Solar Modules Fault Detection with CNN+PyTorch. Kaggle. https://www.kaggle.com/code/aliakbaryaghoubi/solar-modules-fault-detection-with-cnn-pytorch
