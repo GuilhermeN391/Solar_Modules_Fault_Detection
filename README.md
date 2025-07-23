@@ -219,7 +219,8 @@ A aplicação dos procedimentos da LRFinder retornou uma sugestão de _learning 
 
 #### 2.4 Aplicação do LRFinder
 
-**Procura da melhor taxa de aprendizado:** 
+**Procura da melhor taxa de aprendizado:**
+
   ![Gráfico do LRFinder](images/LRFinder_VDCNN.png)
 
 **Evolução da perdas com o novo _learning rate_:** 
