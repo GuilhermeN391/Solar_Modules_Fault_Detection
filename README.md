@@ -12,6 +12,7 @@ Este reposiório hospeda um modelo de aprendizado de máquina em uma Rede Neural
 - **Inspirado em**: 
   - [Solar Modules Fault Detection with CNN+PyTorch](https://www.kaggle.com/code/aliakbaryaghoubi/solar-modules-fault-detection-with-cnn-pytorch)
   - [PPGEEC2318 - Week11](https://github.com/ivanovitchm/ppgeec2318/blob/main/lessons/week11/week11.ipynb)
+  - [Deep Learning with PyTorch Step-by-Step: A Beginner's Guide - Chapter 6](https://github.com/dvgodoy/PyTorchStepByStep/blob/master/Chapter06.ipynb)
 
 ## Model Card
 
@@ -151,7 +152,17 @@ Foram feitos testes utilizando os hiperparâmetros iguais aos testados no modelo
 - p = 0,16571;
 - lr = 0,00040153; 
 
-Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206**, a acurácia de validação foi **0,7657** e a precisão ponderada foi **0,7578**.
+Com um treinamento de 15 épocas, as perdas finais de validação foram **0,7990**, a acurácia de validação foi **0,7466** e a precisão ponderada foi **0,7376**.
+
+### Melhoria da taxa de aprendizado com o LRFinder
+
+A partir do melhor modelo apresentado anteriormente, buscando formas de maximizar ainda mais os resultados, foram aplicados conceitos de procura do melhor _learning rate_ no melhor modelo de CNN, o VeryDeepCNN. Para fazer esse processo, foi implementada a biblioteca _LRFinder_ do Pytorch, seguindo os procedimentos presentes em [Deep Learning with PyTorch Step-by-Step: A Beginner's Guide - Chapter 6](https://github.com/dvgodoy/PyTorchStepByStep/blob/master/Chapter06.ipynb), que realiza essa procura baseado no modelo fornecido para a função de procura da melhor taxa de aprendizado. Com os parâmetros iniciais para aplicação:
+
+- n_feature = 14; 
+- p = 0,16571;
+- lr = 0,00040153; 
+
+A aplicação dos procedimentos da LRFinder retornou uma sugestão de _learning rate_ de **0,000876**. Aplicando esse novo parâmetro o modelo anterior com as mesmas configurações anteriores, as perdas finais de validação foram **0,8239**, a acurácia de validação foi **0,7507** e a precisão ponderada foi **0,7532**. As visualizações referentes a aplicação do LRFinder estão dispostas a seguir.
 
 ## Visualizações
 
@@ -206,6 +217,17 @@ Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206
 
   ![Hooks CNN4](images/Hooks_verydeep.png)
 
+#### 2.4 Aplicação do LRFinder
+
+**Procura da melhor taxa de aprendizado:** 
+  ![Gráfico do LRFinder](images/LRFinder_VDCNN.png)
+
+**Evolução da perdas com o novo _learning rate_:** 
+  ![Evolução das perdas novo LR](images/Loss_fig_bestLR.png)  
+
+**Matriz de Confusão:**  
+   ![Matriz de confusão CNN4 melhor](images/Conf_matriz_bestLR.png)
+
 ## Tabelas Adicionais
 
 ### Métricas resultantes por modelo
@@ -224,7 +246,8 @@ Com um treinamento de 20 épocas, as perdas finais de validação foram **0,7206
 - As 12 classificações do sistema estão desbalanceadas, uma vez que existem 11 tipos diferentes de anomalias catalogadas e apenas 1 classe para os módulos em defeitos, como já mencionado. Fazendo com que haja uma variação de amostras, variando dos 10.000 presentes na classe "No-Anomally", para 1.877 na classe "Cell", com o valor mínimo de amostras presentes na classe "Diode-Multi" com 175;
 - Ao aplicar tanto no modelo de duas camadas, quanto no de quatro camadas, houve melhores resultados quando foram aplicados novos hiperparâmetros, que possibilitaram o melhor aproveitamento de abmos os modelos, entregando métricas de resultados maximizadas;
 - Outro fator de melhora para o modelo de Rede Neural Convolucional foi a adição de mais camadas internas, com variação no número de features internas, havendo uma potencialização na melhora das métricas de resultados, principalmente ao alinhar o aumento de camadas à variação dos hiperparâmetros;
-- A classe principal do Dataset, a "No-Anomally" concentrou metade dos dados totais do Dataset, ou seja, há uma grande influência nos resultados finais do modelo, por exemplo: a presição nela foi de 0.8825, um valor acima da precisão poderada, indicando que o modelo trabalha bem com clases mais povoadas, havendo mais amostras para validação e/ou treinamento.
+- A classe principal do Dataset, a "No-Anomally" concentrou metade dos dados totais do Dataset, ou seja, há uma grande influência nos resultados finais do modelo, por exemplo: a presição nela foi de 0.8825, um valor acima da precisão poderada, indicando que o modelo trabalha bem com clases mais povoadas, havendo mais amostras para validação e/ou treinamento;
+- O processo de melhoria da _learning rate_ trouxe um aprimoramento ao modelo VeryDeepModel, com uma súbita melhora nos resultados do modelo, após a realização dos testes das diferentes taxas de aprendizado através do LRFinder.
 
 ## Como usar o modelo
 
@@ -358,3 +381,4 @@ if __name__ == "__main__":
 
 2. Dantas da Silva, I. M. (2025). PPGEEC2318 - Week11: Machine Learning and Computer Vision - Part III. GitHub. https://github.com/ivanovitchm/ppgeec2318/blob/main/lessons/week11/week11.ipynb
 
+3. Godoy, D. V. (2022). Deep Learning with PyTorch Step-by-Step: A Beginner's Guide - Chapter 6. GitHub. https://github.com/dvgodoy/PyTorchStepByStep/blob/master/Chapter06.ipynb
